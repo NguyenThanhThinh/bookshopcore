@@ -1,0 +1,2 @@
+# bookshopcore
+use .net core
