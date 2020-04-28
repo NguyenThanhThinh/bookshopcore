@@ -15,6 +15,7 @@ namespace BookShop.Models
 
 		public decimal Price { get; set; }
 
+		public string Alias { set; get; }
 		public int AuthorId { get; set; }
 
 		public Author Author { get; set; }
@@ -22,6 +23,6 @@ namespace BookShop.Models
 		public int CategoryId { get; set; }
 
 		public Category Category { get; set; }
-		public DateTime CreateDate { get; set; }
+		public DateTime CreateDate { get; set; } = DateTime.Now;
 	}
 }
