@@ -7,8 +7,14 @@
 
 <h1>List category</h1>
 
+<!-- Modal placeholder -->
+<div id="modal-placeholder"></div>
 
-<button class="btn btn-primary fa-pull-right mb-2" asp-action="Create"><i class="fas fa-plus"></i></button>
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-update" data-url="@Url.Action("CreateOrUpdate",new {Id= 0 })">
+    Add contact
+</button>
+@*<a asp-action="Create" asp-controller="Categories" class="btn btn-primary fa-pull-right mb-2" ><i class="fas fa-plus" ></i></a>*@
 <table class="table table-bordered">
     <thead>
         <tr>
@@ -38,11 +44,13 @@
                     @Html.DisplayFor(modelItem => item.CreateDate)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id"><i class="fa fa-marker fa-lg"></i></a>
+                    <button class="btn btn-info" data-toggle="modal" data-target="#add-update" data-url="@Url.Action("CreateOrUpdate",new {Id= item.Id })"><i class="fa fa-marker fa-lg"></i></button>
 
-                    <a asp-action="Delete" asp-route-id="@item.Id"><i class="fa fa-trash-alt fa-lg"></i></a>
+                    <button class="btn btn-info" data-toggle="modal" data-target="#delete-category" data-url="@Url.Action("Delete",new {Id= item.Id })"><i class="fa fa-trash-alt fa-lg"></i></button>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+

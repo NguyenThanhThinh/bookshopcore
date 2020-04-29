@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using BookShop.Data;
 using BookShop.Models;
 using static BookShop.Extensions.StringExtensions;
+using System;
+
 namespace BookShop.Controllers
 {
     public class CategoriesController : Controller
@@ -16,75 +18,50 @@ namespace BookShop.Controllers
             _context = context;
         }
 
+     
+        public async Task<IActionResult> CreateOrUpdate(int? Id)
+        {
+            var model = new Category();
+
+            if (Id.HasValue)
+            {
+                model = await _context.Categories
+               .FirstOrDefaultAsync(m => m.Id == Id);           
+            }
+            return PartialView("_CreateOrUpdateModalPartial", model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateOrUpdate(Category model,int Id)
+        {
+            if (ModelState.IsValid)
+            {
+                if (Id == 0)
+                {
+                    model.Alias = model.Name.ToFriendlyUrl();
+                    _context.Add(model);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+
+               
+            }
+
+            return PartialView("_CreateOrUpdateModalPartial", model);
+        }
         // GET: Categories
         public async Task<IActionResult> Index()
         {
             return View(await _context.Categories.ToListAsync());
         }
 
-        // GET: Categories/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var category = await _context.Categories
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (category == null)
-            {
-                return NotFound();
-            }
-
-            return View(category);
-        }
-
-        // GET: Categories/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Categories/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Alias,Description,CreateDate")] Category category)
-        {
-            if (ModelState.IsValid)
-            {
-                category.Alias = category.Name.ToFriendlyUrl();
-                _context.Add(category);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(category);
-        }
-
-        // GET: Categories/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var category = await _context.Categories.FindAsync(id);
-            if (category == null)
-            {
-                return NotFound();
-            }
-            return View(category);
-        }
+       
 
         // POST: Categories/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Alias,Description,CreateDate")] Category category)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Alias,Description,CreateDate,UpdateDate")] Category category)
         {
             if (id != category.Id)
             {
@@ -93,51 +70,39 @@ namespace BookShop.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(category);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CategoryExists(category.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                category.UpdateDate = DateTime.Now;
+                category.Alias= category.Name.ToFriendlyUrl();
+                _context.Update(category);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(category);
         }
 
         // GET: Categories/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? Id)
         {
-            if (id == null)
+            if (Id == null)
             {
                 return NotFound();
             }
 
             var category = await _context.Categories
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == Id);
             if (category == null)
             {
                 return NotFound();
             }
 
-            return View(category);
+            return PartialView("_DeleteCategory", category);
         }
 
         // POST: Categories/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int Id)
         {
-            var category = await _context.Categories.FindAsync(id);
+            var category = await _context.Categories.FindAsync(Id);
             _context.Categories.Remove(category);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
