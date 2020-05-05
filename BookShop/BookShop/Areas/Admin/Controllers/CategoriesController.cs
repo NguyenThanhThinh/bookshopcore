@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BookShop.Data;
 using BookShop.Models;
+using AutoMapper;
+using BookShop.ViewModels.Categories;
+using System.Collections.Generic;
 
 namespace BookShop.Areas.Admin.Controllers
 {
@@ -14,16 +17,20 @@ namespace BookShop.Areas.Admin.Controllers
 	{
 		private readonly BookShopDbContext _context;
 
-		public CategoriesController(BookShopDbContext context)
+		private readonly IMapper _mapper;
+		public CategoriesController(BookShopDbContext context, IMapper mapper)
 		{
 			_context = context;
+			_mapper = mapper;
 		}
 
 		public async Task<IActionResult> Index()
 		{
 			var model = await _context.Categories.OrderByDescending(n => n.CreateDate).ToListAsync();
 
-			return View(model);
+			var viewModel = _mapper.Map<IEnumerable<CategoryViewModel>>(model);
+
+			return View(viewModel);
 		}
 
 		public async Task<IActionResult> CreateOrUpdate(int? id)
