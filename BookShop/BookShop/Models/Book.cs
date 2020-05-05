@@ -17,6 +17,7 @@ namespace BookShop.Models
 		[Required(ErrorMessage = "Please select your author")]
 		public int AuthorId { get; set; }
 
+		public string Image { get; set; }
 		public Author Author { get; set; }
 
 		[Required(ErrorMessage = "Please select your category")]
