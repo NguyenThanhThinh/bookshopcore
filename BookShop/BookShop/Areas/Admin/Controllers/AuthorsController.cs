@@ -10,29 +10,29 @@ namespace BookShop.Areas.Admin.Controllers
 {
 	using static BookShop.Extensions.StringExtensions;
 	[Area("Admin")]
-	public class CategoriesController : Controller
+	public class AuthorsController : Controller
 	{
 		private readonly BookShopDbContext _context;
 
-		public CategoriesController(BookShopDbContext context)
+		public AuthorsController(BookShopDbContext context)
 		{
 			_context = context;
 		}
 
 		public async Task<IActionResult> Index()
 		{
-			var model = await _context.Categories.OrderByDescending(n => n.CreateDate).ToListAsync();
+			var model = await _context.Authors.OrderByDescending(n => n.CreateDate).ToListAsync();
 
 			return View(model);
 		}
 
 		public async Task<IActionResult> CreateOrUpdate(int? id)
 		{
-			var model = new Category();
+			var model = new Author();
 
 			if (id != null)
 			{
-				model = await _context.Categories.FindAsync(id);
+				model = await _context.Authors.FindAsync(id);
 
 				if (model == null)
 				{
@@ -44,38 +44,40 @@ namespace BookShop.Areas.Admin.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create([Bind("Id,Name,Alias,Description,CreateDate,UpdateDate")] Category category)
+		public async Task<IActionResult> Create([Bind("Id,Name,Alias,Description,CreateDate,UpdateDate")] Author Author)
 		{
 			if (ModelState.IsValid)
 			{
-				category.Alias = category.Name.ToFriendlyUrl();
-				_context.Add(category);
+				Author.Alias = Author.Name.ToFriendlyUrl();
+				_context.Add(Author);
 				TempData["Message"] = "Your caterory was successfully added!";
 				await _context.SaveChangesAsync();
 				return RedirectToAction(nameof(Index));
 			}
-			return View("~/Areas/Admin/Views/Categories/CreateOrUpdate.cshtml",category);
+			return View("~/Areas/Admin/Views/Authors/CreateOrUpdate.cshtml",Author);
 		}
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Alias,Description,CreateDate,UpdateDate")] Category category)
+		public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Alias,Description,CreateDate,UpdateDate")] Author Author)
 		{
-			if (id != category.Id)
+			if (id != Author.Id)
 			{
 				return NotFound();
 			}
 
 			if (ModelState.IsValid)
 			{
-				category.Alias = category.Name.ToFriendlyUrl();
-				category.UpdateDate = DateTime.Now;
-				_context.Update(category);
+				Author.Alias = Author.Name.ToFriendlyUrl();
+				Author.UpdateDate = DateTime.Now;
+				_context.Update(Author);
 				TempData["Message"] = "Your caterory was successfully updated!";
 				await _context.SaveChangesAsync();
+
+
 				return RedirectToAction(nameof(Index));
 			}
-			return View("~/Areas/Admin/Views/Categories/CreateOrUpdate.cshtml", category);
+			return View("~/Areas/Admin/Views/Authors/CreateOrUpdate.cshtml", Author);
 		}
 
 		public async Task<IActionResult> Delete(int? id)
@@ -85,27 +87,27 @@ namespace BookShop.Areas.Admin.Controllers
 				return NotFound();
 			}
 
-			var category = await _context.Categories
+			var Author = await _context.Authors
 				.FirstOrDefaultAsync(m => m.Id == id);
-			if (category == null)
+			if (Author == null)
 			{
 				return NotFound();
 			}
 
-			return View(category);
+			return View(Author);
 		}
 
 		[HttpPost, ActionName("Delete")]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> DeleteConfirmed(int id)
 		{
-			var category = await _context.Categories.FindAsync(id);
-			_context.Categories.Remove(category);
+			var Author = await _context.Authors.FindAsync(id);
+			_context.Authors.Remove(Author);
 			await _context.SaveChangesAsync();
 			TempData["Message"] = "Your caterory was successfully deleted!";
 			return RedirectToAction(nameof(Index));
 		}
 
-		
+
 	}
 }
