@@ -1,4 +1,4 @@
-﻿@model BookShop.Models.Category
+﻿@model BookShop.ViewModels.Categories.CreateOrUpdateViewModel
 
 @{
     var title = Model?.Id != 0 ? $"Update {Model.Name}" : "Create Category";
@@ -29,7 +29,7 @@
 
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
+                <textarea asp-for="Description" class="form-control"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
 

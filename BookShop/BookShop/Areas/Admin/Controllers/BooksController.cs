@@ -9,6 +9,8 @@ using BookShop.Data;
 using BookShop.Models;
 using Microsoft.AspNetCore.Http;
 using BookShop.Extensions;
+using AutoMapper;
+using BookShop.ViewModels.Books;
 
 namespace BookShop.Areas.Admin.Controllers
 {
@@ -17,16 +19,21 @@ namespace BookShop.Areas.Admin.Controllers
 	{
 		private readonly BookShopDbContext _context;
 
-		public BooksController(BookShopDbContext context)
+		private readonly IMapper _mapper;
+		public BooksController(BookShopDbContext context, IMapper mapper)
 		{
 			_context = context;
+			_mapper = mapper;
 		}
 
 		// GET: Admin/Books
 		public async Task<IActionResult> Index()
 		{
-			var bookShopDbContext = _context.Books.Include(b => b.Author).Include(b => b.Category);
-			return View(await bookShopDbContext.ToListAsync());
+			var books = await _context.Books.Include(b => b.Author).Include(b => b.Category).ToListAsync();
+
+			var viewModel = _mapper.Map<IEnumerable<BookIndexViewModel>>(books);
+
+			return View( viewModel);
 		}
 
 		// GET: Admin/Books/Details/5

@@ -25,7 +25,6 @@
 
   <ItemGroup>
     <Folder Include="Areas\Admin\Models\" />
-    <Folder Include="ViewModels\Books\" />
     <Folder Include="wwwroot\images\books\" />
   </ItemGroup>
 

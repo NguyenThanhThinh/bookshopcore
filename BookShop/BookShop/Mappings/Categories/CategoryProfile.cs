@@ -9,6 +9,8 @@ namespace BookShop.Mappings.Categories
 		public CategoryProfile()
 		{
 			CreateMap<Category, CategoryViewModel>();
+			CreateMap<Category, CreateOrUpdateViewModel>();
+			CreateMap<CreateOrUpdateViewModel, Category>();
 		}
 		
 	}

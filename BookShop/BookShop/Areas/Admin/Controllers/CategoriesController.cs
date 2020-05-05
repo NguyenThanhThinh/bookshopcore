@@ -35,11 +35,13 @@ namespace BookShop.Areas.Admin.Controllers
 
 		public async Task<IActionResult> CreateOrUpdate(int? id)
 		{
-			var model = new Category();
+			var model = new CreateOrUpdateViewModel();
 
 			if (id != null)
 			{
-				model = await _context.Categories.FindAsync(id);
+				var data = await _context.Categories.FindAsync(id);
+
+				model = _mapper.Map<CreateOrUpdateViewModel>(data);
 
 				if (model == null)
 				{
@@ -51,22 +53,30 @@ namespace BookShop.Areas.Admin.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create([Bind("Id,Name,Alias,Description,CreateDate,UpdateDate")] Category category)
+		public async Task<IActionResult> Create([Bind("Id,Name,Alias,Description,CreateDate,UpdateDate")] CreateOrUpdateViewModel category)
 		{
 			if (ModelState.IsValid)
 			{
 				category.Alias = category.Name.ToFriendlyUrl();
-				_context.Add(category);
+
+				category.UpdateDate = DateTime.Now;
+
+				var viewModel = _mapper.Map<Category>(category);
+
+				_context.Add(viewModel);
+
 				TempData["Message"] = "Your caterory was successfully added!";
+
 				await _context.SaveChangesAsync();
+
 				return RedirectToAction(nameof(Index));
 			}
-			return View("~/Areas/Admin/Views/Categories/CreateOrUpdate.cshtml",category);
+			return View("~/Areas/Admin/Views/Categories/CreateOrUpdate.cshtml", category);
 		}
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Alias,Description,CreateDate,UpdateDate")] Category category)
+		public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Alias,Description,CreateDate,UpdateDate")] CreateOrUpdateViewModel category)
 		{
 			if (id != category.Id)
 			{
@@ -75,11 +85,19 @@ namespace BookShop.Areas.Admin.Controllers
 
 			if (ModelState.IsValid)
 			{
+				
 				category.Alias = category.Name.ToFriendlyUrl();
+
 				category.UpdateDate = DateTime.Now;
-				_context.Update(category);
+
+				var viewModel = _mapper.Map<Category>(category);
+
+				_context.Update(viewModel);
+
 				TempData["Message"] = "Your caterory was successfully updated!";
+
 				await _context.SaveChangesAsync();
+
 				return RedirectToAction(nameof(Index));
 			}
 			return View("~/Areas/Admin/Views/Categories/CreateOrUpdate.cshtml", category);
@@ -113,6 +131,6 @@ namespace BookShop.Areas.Admin.Controllers
 			return RedirectToAction(nameof(Index));
 		}
 
-		
+
 	}
 }
