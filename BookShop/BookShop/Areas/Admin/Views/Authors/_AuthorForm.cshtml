@@ -1,11 +1,11 @@
 ﻿@model BookShop.Models.Author
 
 @{
-    var title = Model != null ? $"Update {Model.Name}" : "Create Author";
+    var title = Model?.Id != 0 ? $"Update {Model.Name}" : "Create Author";
 
-    var contentButton = Model != null  ? "<button type='submit' class='btn btn-primary'> <i class='fas fa-save'></i> </button>": "<button type='submit' class='btn btn-primary'> <i class='fas fa-save'></i> </button>";
+    var contentButton = Model?.Id != 0  ? "<button type='submit' class='btn btn-primary'> <i class='fas fa-save'></i> </button>": "<button type='submit' class='btn btn-primary'> <i class='fas fa-save'></i> </button>";
 
-    var actionSubmit = Model != null ? "Edit" : "Create";
+    var actionSubmit = Model?.Id != 0 ? "Edit" : "Create";
 
 }
 
@@ -17,7 +17,7 @@
     <div class="col-md-4">
         <form asp-action="@actionSubmit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            @if (Model != null )
+            @if (Model?.Id != 0 )
             {
                 <input type="hidden" asp-for="Id" />
             }

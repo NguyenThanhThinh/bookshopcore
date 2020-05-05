@@ -1,11 +1,11 @@
 ﻿@model BookShop.Models.Category
 
 @{
-    var title = Model!=null? $"Update {Model.Name}" : "Create Category";
+    var title = Model?.Id != 0 ? $"Update {Model.Name}" : "Create Category";
 
-    var contentButton = Model != null ? "<button type='submit' class='btn btn-primary'> <i class='fas fa-save'></i> </button>": "<button type='submit' class='btn btn-primary'> <i class='fas fa-save'></i> </button>";
+    var contentButton = Model?.Id != 0 ? "<button type='submit' class='btn btn-primary'> <i class='fas fa-save'></i> </button>" : "<button type='submit' class='btn btn-primary'> <i class='fas fa-save'></i> </button>";
 
-    var actionSubmit = Model != null ? "Edit" : "Create";
+    var actionSubmit = Model?.Id != 0 ? "Edit" : "Create";
 
 }
 
@@ -35,7 +35,7 @@
 
 
             <div class="form-group">
-                @Html.Raw(contentButton) 
+                @Html.Raw(contentButton)
             </div>
         </form>
     </div>
