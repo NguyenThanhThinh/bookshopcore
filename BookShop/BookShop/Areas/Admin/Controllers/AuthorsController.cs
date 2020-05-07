@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BookShop.Data;
 using BookShop.Models;
+using AutoMapper;
+using System.Collections.Generic;
+using BookShop.ViewModels.Authors;
 
 namespace BookShop.Areas.Admin.Controllers
 {
@@ -14,16 +17,20 @@ namespace BookShop.Areas.Admin.Controllers
 	{
 		private readonly BookShopDbContext _context;
 
-		public AuthorsController(BookShopDbContext context)
+		private readonly IMapper _mapper;
+		public AuthorsController(BookShopDbContext context,IMapper mapper)
 		{
 			_context = context;
+			_mapper = mapper;
 		}
 
 		public async Task<IActionResult> Index()
 		{
 			var model = await _context.Authors.OrderByDescending(n => n.CreateDate).ToListAsync();
 
-			return View(model);
+			var viewModel = _mapper.Map<IEnumerable<AuthorViewModel>>(model);
+
+			return View(viewModel);
 		}
 
 		public async Task<IActionResult> CreateOrUpdate(int? id)
@@ -44,12 +51,18 @@ namespace BookShop.Areas.Admin.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create([Bind("Id,Name,Alias,Description,CreateDate,UpdateDate")] Author Author)
+		public async Task<IActionResult> Create([Bind("Id,Name,Alias,Description,CreateDate,UpdateDate")] CreateOrUpdateAuthorViewModel Author)
 		{
 			if (ModelState.IsValid)
 			{
 				Author.Alias = Author.Name.ToFriendlyUrl();
-				_context.Add(Author);
+
+				Author.UpdateDate = DateTime.Now;
+
+				var viewModel = _mapper.Map<Author>(Author);
+
+				_context.Add(viewModel);
+
 				TempData["Message"] = "Your caterory was successfully added!";
 				await _context.SaveChangesAsync();
 				return RedirectToAction(nameof(Index));
@@ -59,7 +72,7 @@ namespace BookShop.Areas.Admin.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Alias,Description,CreateDate,UpdateDate")] Author Author)
+		public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Alias,Description,CreateDate,UpdateDate")] CreateOrUpdateAuthorViewModel Author)
 		{
 			if (id != Author.Id)
 			{
@@ -69,9 +82,15 @@ namespace BookShop.Areas.Admin.Controllers
 			if (ModelState.IsValid)
 			{
 				Author.Alias = Author.Name.ToFriendlyUrl();
+
 				Author.UpdateDate = DateTime.Now;
-				_context.Update(Author);
+
+				var viewModel = _mapper.Map<Author>(Author);
+
+				_context.Update(viewModel);
+
 				TempData["Message"] = "Your caterory was successfully updated!";
+
 				await _context.SaveChangesAsync();
 
 
