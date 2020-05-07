@@ -33,7 +33,7 @@ namespace BookShop.Areas.Admin.Controllers
 
 			var viewModel = _mapper.Map<IEnumerable<BookIndexViewModel>>(books);
 
-			return View( viewModel);
+			return View(viewModel);
 		}
 
 		// GET: Admin/Books/Details/5
@@ -57,11 +57,26 @@ namespace BookShop.Areas.Admin.Controllers
 		}
 
 		// GET: Admin/Books/Create
-		public IActionResult Create()
+		public async Task<IActionResult> CreateOrUpdate(int? id)
 		{
-			ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "Name");
-			ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name");
-			return View();
+			var model = new CreateOrUpdateBookViewModel();
+
+			if (id != null)
+			{
+				var book= await _context.Books.FindAsync(id);
+
+				model = _mapper.Map<CreateOrUpdateBookViewModel>(book);
+
+				ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "Name", book.AuthorId);
+				ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", book.CategoryId);
+			}
+			else
+			{
+				ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "Name");
+				ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name");
+			}
+	
+			return View(model);
 		}
 
 

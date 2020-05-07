@@ -5,11 +5,11 @@
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<div class="float-right pb-2">
+    <a class="btn btn-primary" href="@Url.Action("CreateOrUpdate","Books", new {Area = "Admin"})">
+        <i class="fas fa-plus"></i>
+    </a>
+</div>
 <table class="table">
     <thead>
         <tr>
@@ -22,10 +22,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Price)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Alias)
-            </th>
-           
+     
             <th>
                 @Html.DisplayNameFor(model => model.CategoryName)
             </th>
@@ -35,7 +32,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.CreateDate)
             </th>
-           
+
             <th></th>
         </tr>
     </thead>
@@ -53,10 +50,6 @@
                     @Html.DisplayFor(modelItem => item.PriceFormatted)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Alias)
-                </td>
-               
-                <td>
                     @Html.DisplayFor(modelItem => item.CategoryName)
                 </td>
                 <td>
@@ -65,11 +58,15 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.CreateDate)
                 </td>
-              
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <div class="pull-right">
+                        <a href="@Url.Action("CreateOrUpdate","Books", new {Area = "Admin",id = item.Id })" class="btn btn-warning btn-sm margin-right">
+                            <i class="fas fa-edit"></i><span class="hidden-xs"></span>
+                        </a>
+                        <a href="@Url.Action("Delete","Books", new {Area = "Admin",id = item.Id })" class="btn btn-danger btn-sm">
+                            <i class="fas fa-trash"></i><span class="hidden-xs"></span>
+                        </a>
+                    </div>
                 </td>
             </tr>
         }
