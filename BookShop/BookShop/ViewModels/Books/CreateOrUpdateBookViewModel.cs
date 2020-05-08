@@ -13,10 +13,12 @@
 
 		public string Alias { set; get; }
 
-	
+		public string PriceFormatted { get; set; }
 		public int CategoryId { get; set; }
 
 
 		public int AuthorId { get; set; }
+
+		public string Image { get; set; }
 	}
 }

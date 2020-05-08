@@ -1,11 +1,16 @@
 ﻿@model BookShop.ViewModels.Books.CreateOrUpdateBookViewModel
 @{
     ViewData["Title"] = "_BookForm";
+    var actionSubmit = Model?.Id != 0 ? "Edit" : "Create";
 }
 
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create" enctype="multipart/form-data">
+    <div class="col-md-12">
+        <form asp-action="@actionSubmit" enctype="multipart/form-data">
+            @if (Model?.Id != 0)
+            {
+                <input type="hidden" asp-for="Id" />
+            }
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
@@ -19,23 +24,22 @@
             </div>
             <div class="form-group">
                 <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
+                <input asp-for="PriceFormatted" class="form-control money" />
+                <span asp-validation-for="PriceFormatted" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="AuthorId" class="control-label"></label>
                 <select asp-for="AuthorId" class="form-control" asp-items="ViewBag.AuthorId"></select>
             </div>
             <div class="form-group">
-                @*<label asp-for="Image" class="control-label"></label>
-                    <input asp-for="Image" class="form-control d-none" />
-                    <input type="file" name="fImage" id="fHinh" class="form-control" />
-                    <br />
-                    <img id="imagePreview" width="300" />*@
-                <div class="custom-file mb-3">
-                    <input type="file" class="custom-file-input" id="fImage" name="fImage">
-                    <label class="custom-file-label" for="customFile">Choose file</label>
-                </div>
+                <label asp-for="Image" class="control-label"></label>
+                @if (Model?.Id != 0)
+                {
+                    <img src="~/images/books/@Model.Image" asp-for="Image" data-img="~/images/books/@Model.Image" id="imagePreview" width="300" />
+                }
+                <input asp-for="Image" class="form-control d-none" />
+                <input type="file" name="fImage" id="fImage" class="form-control" />
+                <span asp-validation-for="Image" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="CategoryId" class="control-label"></label>
@@ -44,7 +48,7 @@
 
 
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <button type="submit" class="btn btn-primary"> <i class='fas fa-save'></i></button>
             </div>
         </form>
     </div>
@@ -53,4 +57,10 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
-
+@section scripts {
+    <script>
+        (function () {
+            app.buildFormValidation();
+        })();
+    </script>
+}

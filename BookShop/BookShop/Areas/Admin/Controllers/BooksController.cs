@@ -63,7 +63,7 @@ namespace BookShop.Areas.Admin.Controllers
 
 			if (id != null)
 			{
-				var book= await _context.Books.FindAsync(id);
+				var book = await _context.Books.FindAsync(id);
 
 				model = _mapper.Map<CreateOrUpdateBookViewModel>(book);
 
@@ -75,30 +75,36 @@ namespace BookShop.Areas.Admin.Controllers
 				ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "Name");
 				ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name");
 			}
-	
+
 			return View(model);
 		}
 
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create([Bind("Id,Title,Description,Price,Alias,AuthorId,Image,CategoryId,CreateDate,UpdateDate")] Book book, IFormFile fImage)
+		public async Task<IActionResult> Create([Bind("Id,Title,Description,PriceFormatted,Alias,AuthorId,Image,CategoryId,CreateDate,UpdateDate")] CreateOrUpdateBookViewModel book, IFormFile fImage)
 		{
 			if (ModelState.IsValid)
 			{
+				if (fImage == null || fImage.Length == 0)
+				{
+					ModelState.AddModelError("", "Uploaded file is empty or null.");
+					return View("~/Areas/Admin/Views/Books/CreateOrUpdate.cshtml", book);
+				}
 				string image = UploadFileExtensions.UploadFile(fImage, "books");
 
 				if (!string.IsNullOrEmpty(image)) book.Image = image;
 
 				book.Alias = book.Title.ToFriendlyUrl();
 
-				_context.Add(book);
+				var viewModel = _mapper.Map<Book>(book);
+				_context.Add(viewModel);
 				await _context.SaveChangesAsync();
 				return RedirectToAction(nameof(Index));
 			}
 			ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "Name", book.AuthorId);
 			ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", book.CategoryId);
-			return View(book);
+			return View("~/Areas/Admin/Views/Books/CreateOrUpdate.cshtml", book);
 		}
 
 		// GET: Admin/Books/Edit/5
@@ -124,7 +130,7 @@ namespace BookShop.Areas.Admin.Controllers
 		// more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Price,Alias,AuthorId,Image,CategoryId,CreateDate,UpdateDate")] Book book, IFormFile fImage)
+		public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,PriceFormatted,Alias,AuthorId,Image,CategoryId,CreateDate,UpdateDate")] CreateOrUpdateBookViewModel book, IFormFile fImage)
 		{
 			if (id != book.Id)
 			{
@@ -133,28 +139,26 @@ namespace BookShop.Areas.Admin.Controllers
 
 			if (ModelState.IsValid)
 			{
-				try
+				if (string.IsNullOrEmpty(book.Image) && fImage.Length == 0)
 				{
-					book.Alias = book.Title.ToFriendlyUrl();
-					_context.Update(book);
-					await _context.SaveChangesAsync();
+					ModelState.AddModelError("", "Uploaded file is empty or null.");
+					return View("~/Areas/Admin/Views/Books/CreateOrUpdate.cshtml", book);
 				}
-				catch (DbUpdateConcurrencyException)
-				{
-					if (!BookExists(book.Id))
-					{
-						return NotFound();
-					}
-					else
-					{
-						throw;
-					}
-				}
+				string image = UploadFileExtensions.UploadFile(fImage, "books");
+
+				if (!string.IsNullOrEmpty(image)) book.Image = image;
+				book.Alias = book.Title.ToFriendlyUrl();
+
+				var viewModel = _mapper.Map<Book>(book);
+
+				_context.Update(viewModel);
+				await _context.SaveChangesAsync();
+
 				return RedirectToAction(nameof(Index));
 			}
 			ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "Name", book.AuthorId);
 			ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", book.CategoryId);
-			return View(book);
+			return View("~/Areas/Admin/Views/Books/CreateOrUpdate.cshtml", book);
 		}
 
 		// GET: Admin/Books/Delete/5
@@ -178,14 +182,14 @@ namespace BookShop.Areas.Admin.Controllers
 		}
 
 		// POST: Admin/Books/Delete/5
-		[HttpPost, ActionName("Delete")]
-		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> DeleteConfirmed(int id)
+		[HttpPost]
+		public async Task<IActionResult> Delete(int id)
 		{
 			var book = await _context.Books.FindAsync(id);
 			_context.Books.Remove(book);
 			await _context.SaveChangesAsync();
-			return RedirectToAction(nameof(Index));
+
+			return new OkObjectResult(new { id, Success = true });
 		}
 
 		private bool BookExists(int id)

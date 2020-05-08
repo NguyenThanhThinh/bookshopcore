@@ -5,70 +5,94 @@
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
-<div class="float-right pb-2">
-    <a class="btn btn-primary" href="@Url.Action("CreateOrUpdate","Books", new {Area = "Admin"})">
-        <i class="fas fa-plus"></i>
-    </a>
-</div>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-     
-            <th>
-                @Html.DisplayNameFor(model => model.CategoryName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AuthorName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreateDate)
-            </th>
 
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PriceFormatted)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CategoryName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.AuthorName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CreateDate)
-                </td>
-                <td>
-                    <div class="pull-right">
-                        <a href="@Url.Action("CreateOrUpdate","Books", new {Area = "Admin",id = item.Id })" class="btn btn-warning btn-sm margin-right">
-                            <i class="fas fa-edit"></i><span class="hidden-xs"></span>
-                        </a>
-                        <a href="@Url.Action("Delete","Books", new {Area = "Admin",id = item.Id })" class="btn btn-danger btn-sm">
-                            <i class="fas fa-trash"></i><span class="hidden-xs"></span>
-                        </a>
-                    </div>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+
+
+<div class="container">
+    <ol class="breadcrumb">
+        <li><a href="@Url.Action("Index", "Dashboard")"></a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+
+    <div class="card">
+        <div class="card-header">
+            <div class="float-right pb-2">
+                <a class="btn btn-primary" href="@Url.Action("CreateOrUpdate","Books", new {Area = "Admin"})">
+                    <i class="fas fa-plus"></i>
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <table class="table  delete-container">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Title)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Description)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Price)
+                        </th>
+
+                        <th>
+                            @Html.DisplayNameFor(model => model.CategoryName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.AuthorName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CreateDate)
+                        </th>
+
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Title)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Description)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PriceFormatted)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CategoryName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AuthorName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CreateDate)
+                            </td>
+                            <td>
+                                <div class="pull-right">
+                                    <a href="@Url.Action("CreateOrUpdate","Books", new {Area = "Admin",id = item.Id })" class="btn btn-warning btn-sm margin-right">
+                                        <i class="fas fa-edit"></i><span class="hidden-xs"></span>
+                                    </a>
+                                    <button data-url="@Url.Action("Delete","Books", new {Area = "Admin",id = item.Id })" class="btn btn-danger btn-sm delete-button">
+                                        <i class="fas fa-trash"></i><span class="hidden-xs"></span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section scripts {
+    <script>
+
+        (function () {
+            app.buildDataTable("", []);
+        })();
+    </script>
+}
