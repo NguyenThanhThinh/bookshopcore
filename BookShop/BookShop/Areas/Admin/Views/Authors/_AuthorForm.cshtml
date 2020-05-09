@@ -1,50 +1,56 @@
 ﻿@model BookShop.ViewModels.Authors.CreateOrUpdateAuthorViewModel
 
 @{
-    var title = Model?.Id != 0 ? $"Update {Model.Name}" : "Create Author";
-
-    var contentButton = Model?.Id != 0  ? "<button type='submit' class='btn btn-primary'> <i class='fas fa-save'></i> </button>": "<button type='submit' class='btn btn-primary'> <i class='fas fa-save'></i> </button>";
-
+    var isUpdate = Model?.Id > 0;
+    ViewBag.Title = isUpdate ? "Danh mục " + Model.Name : "Thêm mới danh mục";
     var actionSubmit = Model?.Id != 0 ? "Edit" : "Create";
+    const string controller = "Authors";
 
 }
 
-<h2>@title</h2>
+<div class="container">
+    <ol class="breadcrumb">
+        <li><a href="@Url.Action("Index", "Dashboard")"><i class="fas fa-home"></i></a></li>
+        <li class="breadcrumb-item"><a href="@Url.Action("Index", controller)">Danh mục</a></li>
+        <li class="breadcrumb-item active">@ViewBag.Title</li>
+    </ol>
+    <div class="card">
+        <div class="card-header">
+            <button type='submit' class='btn btn-primary'> <i class='fas fa-save'></i> </button>
+        </div>
+        <div class="card-body">
+            <form asp-action="@actionSubmit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                @if (Model?.Id != 0)
+                {
+                    <input type="hidden" asp-for="Id" />
+                }
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
 
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label"></label>
+                    <input asp-for="Description" class="form-control editor" />
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
 
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="@actionSubmit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            @if (Model?.Id != 0 )
-            {
-                <input type="hidden" asp-for="Id" />
-            }
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+            </form>
+        </div>
+        <div class="card-footer">
+            <div class="float-left pb-2">
+                <a class="btn btn-primary" href="@Url.Action("Index","Authors", new {Area = "Admin"})">
+                    <i class="fas fa-backward"></i>
+                </a>
             </div>
-
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-
-
-            <div class="form-group">
-                @Html.Raw(contentButton) 
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div class="float-left pb-2">
-    <a class="btn btn-primary" href="@Url.Action("Index","Authors", new {Area = "Admin"})">
-        <i class="fas fa-backward"></i>
-    </a>
-</div>
+
+
+
 
 

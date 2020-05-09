@@ -18,7 +18,7 @@ namespace BookShop.Areas.Admin.Controllers
 		private readonly BookShopDbContext _context;
 
 		private readonly IMapper _mapper;
-		public AuthorsController(BookShopDbContext context,IMapper mapper)
+		public AuthorsController(BookShopDbContext context, IMapper mapper)
 		{
 			_context = context;
 			_mapper = mapper;
@@ -35,11 +35,13 @@ namespace BookShop.Areas.Admin.Controllers
 
 		public async Task<IActionResult> CreateOrUpdate(int? id)
 		{
-			var model = new Author();
+			var model = new CreateOrUpdateAuthorViewModel();
 
 			if (id != null)
 			{
-				model = await _context.Authors.FindAsync(id);
+				var data = await _context.Authors.FindAsync(id);
+
+				model = _mapper.Map<CreateOrUpdateAuthorViewModel>(data);
 
 				if (model == null)
 				{
@@ -67,7 +69,7 @@ namespace BookShop.Areas.Admin.Controllers
 				await _context.SaveChangesAsync();
 				return RedirectToAction(nameof(Index));
 			}
-			return View("~/Areas/Admin/Views/Authors/CreateOrUpdate.cshtml",Author);
+			return View("~/Areas/Admin/Views/Authors/CreateOrUpdate.cshtml", Author);
 		}
 
 		[HttpPost]

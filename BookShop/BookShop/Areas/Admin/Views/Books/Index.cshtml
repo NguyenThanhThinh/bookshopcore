@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    int No = 1;
 }
 
 
@@ -10,8 +11,8 @@
 
 <div class="container">
     <ol class="breadcrumb">
-        <li><a href="@Url.Action("Index", "Dashboard")"></a></li>
-        <li class="active">@ViewBag.Title</li>
+        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")"></a></li>
+        <li class="breadcrumb-item active">@ViewBag.Title</li>
     </ol>
 
     <div class="card">
@@ -23,9 +24,10 @@
             </div>
         </div>
         <div class="card-body">
-            <table class="table  delete-container">
+            <table class="table delete-container">
                 <thead>
                     <tr>
+                        <th>#</th>
                         <th>
                             @Html.DisplayNameFor(model => model.Title)
                         </th>
@@ -53,6 +55,7 @@
                     @foreach (var item in Model)
                     {
                         <tr>
+                            <td>@(No++)</td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.Title)
                             </td>

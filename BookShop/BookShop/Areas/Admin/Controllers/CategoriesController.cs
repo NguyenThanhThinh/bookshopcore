@@ -13,7 +13,7 @@ namespace BookShop.Areas.Admin.Controllers
 {
 	using static BookShop.Extensions.StringExtensions;
 	[Area("Admin")]
-	public class CategoriesController : Controller
+	public class CategoriesController : BaseController
 	{
 		private readonly BookShopDbContext _context;
 
@@ -65,7 +65,7 @@ namespace BookShop.Areas.Admin.Controllers
 
 				_context.Add(viewModel);
 
-				TempData["Message"] = "Your caterory was successfully added!";
+				Alert("Lưu danh mục thành công!");
 
 				await _context.SaveChangesAsync();
 
@@ -94,7 +94,7 @@ namespace BookShop.Areas.Admin.Controllers
 
 				_context.Update(viewModel);
 
-				TempData["Message"] = "Your caterory was successfully updated!";
+				Alert("Lưu danh mục thành công!");
 
 				await _context.SaveChangesAsync();
 
@@ -103,32 +103,14 @@ namespace BookShop.Areas.Admin.Controllers
 			return View("~/Areas/Admin/Views/Categories/CreateOrUpdate.cshtml", category);
 		}
 
-		public async Task<IActionResult> Delete(int? id)
-		{
-			if (id == null)
-			{
-				return NotFound();
-			}
 
-			var category = await _context.Categories
-				.FirstOrDefaultAsync(m => m.Id == id);
-			if (category == null)
-			{
-				return NotFound();
-			}
-
-			return View(category);
-		}
-
-		[HttpPost, ActionName("Delete")]
-		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> DeleteConfirmed(int id)
+		[HttpPost]	
+		public async Task<IActionResult> Delete(int id)
 		{
 			var category = await _context.Categories.FindAsync(id);
 			_context.Categories.Remove(category);
 			await _context.SaveChangesAsync();
-			TempData["Message"] = "Your caterory was successfully deleted!";
-			return RedirectToAction(nameof(Index));
+			return new OkObjectResult(new { id, Success = true });
 		}
 
 

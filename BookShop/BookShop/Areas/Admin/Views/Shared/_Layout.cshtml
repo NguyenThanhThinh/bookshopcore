@@ -25,10 +25,16 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Trang chủ</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Categories" asp-action="Index">Loại sách</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Authors" asp-action="Index">Tác giả</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Books" asp-action="Index">Sách</a>
                         </li>
                     </ul>
                 </div>
@@ -46,6 +52,8 @@
             &copy; 2020 - BookShop - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+    <input type="hidden" class="toast-server" data-type="success" id="success" value="@TempData["success"]" />
+    <input type="hidden" class="toast-server" data-type="error" id="error" value="@TempData["error"]" />
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.16/dist/summernote-bs4.min.js"></script>
@@ -54,14 +62,6 @@
     <script src="~/toastr.js/toastr.min.js"></script>
     <script src="~/datatables/js/jquery.dataTables.js"></script>
     <script src="~/datatables/js/dataTables.bootstrap4.js"></script>
-    <script>
-        $('#Description').summernote({
-            tabsize: 2,
-            height: 150
-        });
-        $('').mask('000,000,000,000,000', { reverse: true });
-    </script>
-
     <script>
         $(document).ready(function () {
 
