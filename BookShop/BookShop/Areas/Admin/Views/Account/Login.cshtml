@@ -1,0 +1,43 @@
+﻿@using BookShop.ViewModels.Accounts
+@model AccountLoginViewModel
+
+@{
+    ViewBag.Title = "Đăng nhập";
+}
+
+    <form asp-action="Login" asp-route-ReturnUrl="@ViewBag.ReturnUrl">
+
+        @Html.AntiForgeryToken()
+
+        <div class="account-container z-depth4">
+
+            @Html.ValidationSummary()
+
+            <div class="form-group">
+                <label asp-for="UserName" class="control-label"></label>
+                <input asp-for="UserName" class="form-control" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div class="form-group clearfix">
+                <div class="checkbox pull-left mv0">
+                    <input type="checkbox" asp-for="RememberMe" class="form-check-input ml-0" />
+                    <label asp-for="RememberMe" class="control-label ml-3"></label>
+
+                </div>
+
+                <div class="pull-right text-right">Chưa có tài khoản? <a href="@Url.Action("Register", "Account")">Tạo tài khoản mới!</a></div>
+            </div>
+
+            <div class="">
+                <button type="submit" class="btn btn-primary btn-block"> Đăng nhập</button>
+            </div>
+        </div>
+    </form>
+

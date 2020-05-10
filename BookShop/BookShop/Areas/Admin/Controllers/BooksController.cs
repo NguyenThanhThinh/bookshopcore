@@ -11,10 +11,12 @@ using Microsoft.AspNetCore.Http;
 using BookShop.Extensions;
 using AutoMapper;
 using BookShop.ViewModels.Books;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookShop.Areas.Admin.Controllers
 {
 	[Area("Admin")]
+	
 	public class BooksController : Controller
 	{
 		private readonly BookShopDbContext _context;

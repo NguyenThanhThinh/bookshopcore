@@ -8,11 +8,12 @@ using BookShop.Models;
 using AutoMapper;
 using BookShop.ViewModels.Categories;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookShop.Areas.Admin.Controllers
 {
 	using static BookShop.Extensions.StringExtensions;
-	[Area("Admin")]
+	[Authorize]
 	public class CategoriesController : BaseController
 	{
 		private readonly BookShopDbContext _context;
@@ -23,7 +24,7 @@ namespace BookShop.Areas.Admin.Controllers
 			_context = context;
 			_mapper = mapper;
 		}
-
+		
 		public async Task<IActionResult> Index()
 		{
 			var model = await _context.Categories.OrderByDescending(n => n.CreateDate).ToListAsync();
