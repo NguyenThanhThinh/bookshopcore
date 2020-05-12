@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookShop.Migrations
 {
     [DbContext(typeof(BookShopDbContext))]
-    [Migration("20200509034216_Identity")]
-    partial class Identity
+    [Migration("20200511040257_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -49,7 +49,7 @@ namespace BookShop.Migrations
                         new
                         {
                             Id = new Guid("8d04dce2-969a-435d-bba4-df3f325983dc"),
-                            ConcurrencyStamp = "61627020-21d8-4a8d-980d-7e73e9a7f24b",
+                            ConcurrencyStamp = "dd42db31-e9b9-4caf-9b29-cfba9b3d2182",
                             Description = "Administrator role",
                             Name = "admin",
                             NormalizedName = "admin"
@@ -78,14 +78,15 @@ namespace BookShop.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FullName")
                         .IsRequired()
                         .HasColumnType("nvarchar(200)")
                         .HasMaxLength(200);
 
                     b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -126,16 +127,17 @@ namespace BookShop.Migrations
                         {
                             Id = new Guid("69bd714f-9576-45ba-b5b7-f00649be00de"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "52cffa0d-c38f-4907-9966-ba20bbf61e36",
+                            ConcurrencyStamp = "164fe0b1-859b-49af-b6c9-a96c3e9447db",
                             Dob = new DateTime(2020, 1, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "thanhthinhcntt@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Thinh",
+                            FullName = "Nguyen Thanh Thinh",
                             LastName = "Thanh",
                             LockoutEnabled = false,
                             NormalizedEmail = "thanhthinhcntt@gmail.com",
                             NormalizedUserName = "admin",
-                            PasswordHash = "AQAAAAEAACcQAAAAEFRobO7++YPFw9VuYOwcwnMNOKOaw+C+GaIUGFU4ALbq6Vibq0bmjE77VXuSKdg8hQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEEVOUDjjUDtMXxLvu6TGVY8Rp2CWUcs95LebgHGxTKE73AisW63lyy0I5dhBg9tClQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,

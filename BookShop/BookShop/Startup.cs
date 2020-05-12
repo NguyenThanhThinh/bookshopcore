@@ -91,6 +91,11 @@ namespace BookShop
 
 			app.UseEndpoints(endpoints =>
 			{
+				endpoints.MapAreaControllerRoute
+				(
+					name: "areas", "admin",
+					pattern: "{area:exists}/{controller=Account}/{action=Login}/{id?}"
+					);
 				endpoints.MapControllerRoute(
 					  name: "Admin",
 					  pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
@@ -99,7 +104,7 @@ namespace BookShop
 					name: "default",
 					pattern: "{controller=Home}/{action=Index}/{id?}");
 
-				
+
 
 			});
 

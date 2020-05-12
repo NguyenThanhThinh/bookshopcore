@@ -37,6 +37,7 @@ namespace BookShop.Data.Extensions
 				SecurityStamp = string.Empty,
 				FirstName = "Thinh",
 				LastName = "Thanh",
+				FullName="Nguyen Thanh Thinh",
 				Dob = new DateTime(2020, 01, 31)
 			});
 
