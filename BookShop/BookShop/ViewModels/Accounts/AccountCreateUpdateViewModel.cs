@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -37,6 +39,8 @@ namespace BookShop.ViewModels.Accounts
         [Display(Name = "Xác nhận mật khẩu")]
         [Compare("Password", ErrorMessage = "Mật khẩu xác nhận không trùng")]
         public string ConfirmPassword { get; set; }
+
+        public IEnumerable<SelectListItem> RolesList { get; set; }
 
     }
 }

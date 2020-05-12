@@ -9,6 +9,7 @@ namespace BookShop.Mappings.Accounts
 		public UserProfile() 
 		{
 			CreateMap<AccountCreateUpdateViewModel, AppUser>();
+			CreateMap< AppUser, AccountCreateUpdateViewModel>();
 		}
 	}
 }

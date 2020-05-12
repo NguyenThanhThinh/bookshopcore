@@ -4,10 +4,13 @@ using System.Threading.Tasks;
 using AutoMapper;
 using BookShop.Models;
 using BookShop.ViewModels.Accounts;
+using BookShop.ViewModels.Roles;
+using BookShop.ViewModels.Users;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -18,16 +21,18 @@ namespace BookShop.Areas.Admin.Controllers
 	{
 		private readonly UserManager<AppUser> _userManager;
 		private readonly SignInManager<AppUser> _signInManager;
+		private RoleManager<AppRole> _roleManager;
 		private readonly ILogger _logger;
 		private readonly IMapper _mapper;
 
 		public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager
-			, ILogger<AccountController> logger, IMapper mapper)
+			, ILogger<AccountController> logger, IMapper mapper, RoleManager<AppRole> roleManager)
 		{
 			_userManager = userManager;
 			_signInManager = signInManager;
 			_logger = logger;
 			_mapper = mapper;
+			_roleManager = roleManager;
 		}
 		[HttpGet]
 		public IActionResult Login(string ReturnUrl = null)
@@ -62,14 +67,17 @@ namespace BookShop.Areas.Admin.Controllers
 					};
 					// create identity
 					ClaimsIdentity userIdentity = new ClaimsIdentity(claims, "login");
+
 					ClaimsPrincipal principal = new ClaimsPrincipal(userIdentity);
+
 					await HttpContext.SignInAsync(principal);
+
 					if (Url.IsLocalUrl(ReturnUrl))
 					{
 						return Redirect(ReturnUrl);
 					}
 
-					return RedirectToAction("Index", "Categories", new { Area = "Admin" });
+					return RedirectToAction("Index", "Dashboard", new { Area = "Admin" });
 				}
 			}
 			return View();
@@ -79,11 +87,14 @@ namespace BookShop.Areas.Admin.Controllers
 		public async Task<IActionResult> LogOff()
 		{
 			await _signInManager.SignOutAsync();
-			return RedirectToAction("Index", "Authors", new { Area = "Admin" });
+
+			return RedirectToAction("Login", "Account", new { Area = "Admin" });
 		}
 		public async Task<IActionResult> GetUsers()
 		{
 			var users = await _userManager.Users.ToListAsync();
+	
+			//ViewData["Roles"] = new SelectList(_roleManager.Roles, "Id", "Name");
 
 			return View();
 		}
@@ -104,6 +115,7 @@ namespace BookShop.Areas.Admin.Controllers
 			var user = _mapper.Map<AppUser>(userModel);
 
 			var result = await _userManager.CreateAsync(user, userModel.Password);
+
 			if (!result.Succeeded)
 			{
 				foreach (var error in result.Errors)
@@ -114,7 +126,7 @@ namespace BookShop.Areas.Admin.Controllers
 				return View(userModel);
 			}
 
-			return RedirectToAction("Index", "Categories", new { Area = "Admin" });
+			return RedirectToAction("Index", "Dashboard", new { Area = "Admin" });
 		}
 	}
 }

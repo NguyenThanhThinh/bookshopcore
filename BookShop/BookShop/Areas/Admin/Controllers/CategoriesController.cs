@@ -34,6 +34,7 @@ namespace BookShop.Areas.Admin.Controllers
 			return View(viewModel);
 		}
 
+		[HttpGet]
 		public async Task<IActionResult> CreateOrUpdate(int? id)
 		{
 			var model = new CreateOrUpdateViewModel();

@@ -1,0 +1,85 @@
+﻿@model IEnumerable<BookShop.ViewModels.Users.UserIndexViewModel>
+
+@{
+    ViewData["Title"] = "Danh mục";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    int No = 1;
+}
+
+
+<div class="container">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")"><i class="fas fa-home"></i></a></li>
+        <li class="breadcrumb-item active">@ViewBag.Title</li>
+    </ol>
+    <div class="card">
+        <div class="card-header">
+            <div class="float-right pb-2">
+                <a class="btn btn-primary" href="@Url.Action("CreateOrUpdate","Users", new {Area = "Admin"})">
+                    <i class="fas fa-plus"></i>
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered delete-container">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.FullName)
+                        </th>
+
+                        <th>
+                            @Html.DisplayNameFor(model => model.UserName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Email)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+
+                            <td>@(No++)</td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FullName)
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.UserName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Email)
+                            </td>
+
+                            <td>
+                                <div class="pull-right">
+                                    <a href="@Url.Action("CreateOrUpdate","Users", new {Area = "Admin",id = item.Id })" class="btn btn-warning btn-sm margin-right">
+                                        <i class="fas fa-edit"></i><span class="hidden-xs"></span>
+                                    </a>
+                                    <button data-url="@Url.Action("Delete","Users", new {Area = "Admin",id = item.Id })" class="btn btn-danger btn-sm delete-button">
+                                        <i class="fas fa-trash"></i><span class="hidden-xs"></span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+@section scripts {
+    <script>
+
+        (function () {
+            app.buildDataTable("", []);
+        })();
+    </script>
+}

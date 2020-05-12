@@ -1,10 +1,10 @@
-﻿@model BookShop.ViewModels.Authors.CreateOrUpdateAuthorViewModel
+﻿@model BookShop.ViewModels.Roles.CreateOrUpdateRoleViewModel
 
 @{
-    var isUpdate = Model?.Id > 0;
+    var isUpdate = Model?.Id != Guid.Empty;
     ViewBag.Title = isUpdate ? "Danh mục " + Model.Name : "Thêm mới danh mục";
-    var actionSubmit = Model?.Id != 0 ? "Edit" : "Create";
-    const string controller = "Authors";
+    var actionSubmit = Model?.Id != Guid.Empty ? "Edit" : "Create";
+    const string controller = "Roles";
 
 }
 
@@ -22,9 +22,9 @@
             <div class="card-body">
 
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                @if (Model?.Id != 0)
+                @if (Model?.Id != Guid.Empty)
                 {
-                <input type="hidden" asp-for="Id" />
+                    <input type="hidden" asp-for="Id" />
                 }
                 <div class="form-group">
                     <label asp-for="Name" class="control-label"></label>
@@ -34,23 +34,22 @@
 
                 <div class="form-group">
                     <label asp-for="Description" class="control-label"></label>
-                    <input asp-for="Description" class="form-control editor" />
+                    <textarea asp-for="Description" class="form-control"></textarea>
                     <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
+
+
             </div>
         </form>
         <div class="card-footer">
             <div class="float-left pb-2">
-                <a class="btn btn-primary" href="@Url.Action("Index","Authors", new {Area = "Admin"})">
+                <a class="btn btn-primary" href="@Url.Action("Index",controller, new {Area = "Admin"})">
                     <i class="fas fa-backward"></i>
                 </a>
             </div>
         </div>
     </div>
 </div>
-
-
-
 
 
 
