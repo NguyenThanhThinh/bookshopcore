@@ -57,11 +57,12 @@
                         Select User Role
                     </label>
                     <div class="col-md-10">
-                        @foreach (var item in Model.RolesList)
+                        
+                        @foreach (var item in Model.RolesList.ToList())
                         {
-                            <input type="checkbox" name="SelectedRoles" value="@item" checked="@item.Selected" class="checkbox-inline" />
+                            <input type="checkbox" name="SelectedRoles" value="@item.Value" checked="@item.Selected" class="checkbox-inline" />
                             <label asp-for="@item.Text">@item.Text</label>
-                            <input type="hidden" asp-for="RolesList" />
+
                         }
                     </div>
                 </div>

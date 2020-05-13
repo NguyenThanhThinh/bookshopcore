@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using BookShop.ViewModels.Roles;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -40,7 +41,7 @@ namespace BookShop.ViewModels.Accounts
         [Compare("Password", ErrorMessage = "Mật khẩu xác nhận không trùng")]
         public string ConfirmPassword { get; set; }
 
-        public IEnumerable<SelectListItem> RolesList { get; set; }
+        public List<CheckboxRoleViewModel> RolesList { get; set; } = new List<CheckboxRoleViewModel>();
 
     }
 }
