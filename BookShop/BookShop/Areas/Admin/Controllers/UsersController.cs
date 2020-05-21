@@ -51,9 +51,18 @@ namespace BookShop.Areas.Admin.Controllers
 
 			var listRoles = await _roleManager.Roles.ToListAsync();
 
-			bool selected = false;
+			List<CheckboxRoleViewModel> list = new List<CheckboxRoleViewModel>();
 
-			if (id != null && id != Guid.Empty)
+			if (id == null || id == Guid.Empty)
+			{
+				list = listRoles.Select(x => new CheckboxRoleViewModel()
+				{
+					Selected = false,
+					Text = x.Name,
+					Value = x.Name
+				}).ToList();
+			}
+			else
 			{
 
 				var user = await _userManager.FindByIdAsync(id.ToString());
@@ -62,21 +71,15 @@ namespace BookShop.Areas.Admin.Controllers
 
 				model = _mapper.Map<AccountCreateUpdateViewModel>(user);
 
-				foreach (AppRole v in listRoles)
+				list = listRoles.Select(x => new CheckboxRoleViewModel()
 				{
-					if (!userRoles.Contains(v.Name))
-					{
-						continue;
-					}
-					selected = true;
-				}
+					Selected = userRoles.Contains(x.Name),
+					Text = x.Name,
+					Value = x.Name
+				}).ToList();
+
 			}
-			List<CheckboxRoleViewModel> list = listRoles.Select(x => new CheckboxRoleViewModel()
-			{
-				Selected = selected,
-				Text = x.Name,
-				Value = x.Name
-			}).ToList();
+
 			model.RolesList = list;
 
 			return model;
