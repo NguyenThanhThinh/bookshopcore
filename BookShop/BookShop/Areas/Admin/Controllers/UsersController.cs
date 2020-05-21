@@ -9,7 +9,6 @@ using BookShop.ViewModels.Roles;
 using BookShop.ViewModels.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -37,9 +36,6 @@ namespace BookShop.Areas.Admin.Controllers
 
 		public async Task<IActionResult> Index()
 
-
-
-		
 		{
 			var users = await _userManager.Users.ToListAsync();
 
@@ -50,23 +46,14 @@ namespace BookShop.Areas.Admin.Controllers
 
 		public async Task<AccountCreateUpdateViewModel> GetRolesAndUserModel(Guid? id)
 		{
-			
+
 			var model = new AccountCreateUpdateViewModel();
 
 			var listRoles = await _roleManager.Roles.ToListAsync();
 
-			if (id == null || id == Guid.Empty)
-			{
-				List<CheckboxRoleViewModel> list = listRoles.Select(x => new CheckboxRoleViewModel()
-				{
+			bool selected = false;
 
-					Text = x.Name,
-					Value = x.Name
-				}).ToList();
-				model.RolesList = list;
-
-			}
-			else
+			if (id != null && id != Guid.Empty)
 			{
 
 				var user = await _userManager.FindByIdAsync(id.ToString());
@@ -75,14 +62,22 @@ namespace BookShop.Areas.Admin.Controllers
 
 				model = _mapper.Map<AccountCreateUpdateViewModel>(user);
 
-				List<CheckboxRoleViewModel> list = listRoles.Select(x => new CheckboxRoleViewModel()
+				foreach (AppRole v in listRoles)
 				{
-					Selected = userRoles.Contains(x.Name),
-					Text = x.Name,
-					Value = x.Name
-				}).ToList();
-				model.RolesList = list;
+					if (!userRoles.Contains(v.Name))
+					{
+						continue;
+					}
+					selected = true;
+				}
 			}
+			List<CheckboxRoleViewModel> list = listRoles.Select(x => new CheckboxRoleViewModel()
+			{
+				Selected = selected,
+				Text = x.Name,
+				Value = x.Name
+			}).ToList();
+			model.RolesList = list;
 
 			return model;
 		}
@@ -103,13 +98,13 @@ namespace BookShop.Areas.Admin.Controllers
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Create(AccountCreateUpdateViewModel userModel, params string[] selectedRoles)
 		{
-			
+
 			var data = await GetRolesAndUserModel(userModel.Id);
 
 			userModel.RolesList = data.RolesList;
 
 			if (!ModelState.IsValid)
-			{							
+			{
 				return View(nameof(CreateOrUpdate), userModel);
 			}
 			var user = _mapper.Map<AppUser>(userModel);
@@ -151,7 +146,6 @@ namespace BookShop.Areas.Admin.Controllers
 
 			if (!ModelState.IsValid)
 			{
-			
 				return View(nameof(CreateOrUpdate), userModel);
 			}
 			var user = await _userManager.FindByIdAsync(userModel.Id.ToString());
@@ -173,12 +167,7 @@ namespace BookShop.Areas.Admin.Controllers
 				{
 					ModelState.TryAddModelError(error.Code, error.Description);
 				}
-				userModel.RolesList = listRoles.Select(x => new CheckboxRoleViewModel()
-				{
-					Text = x.Name,
-					Value = x.Name
-				}).ToList();
-				return View("~/Areas/Admin/Views/Users/CreateOrUpdate.cshtml", userModel);
+				return View(nameof(CreateOrUpdate), userModel);
 			}
 			result = await _userManager.RemoveFromRolesAsync(user, userRoles.Except(selectedRoles).ToArray<string>());
 
@@ -188,12 +177,7 @@ namespace BookShop.Areas.Admin.Controllers
 				{
 					ModelState.TryAddModelError(error.Code, error.Description);
 				}
-				userModel.RolesList = listRoles.Select(x => new CheckboxRoleViewModel()
-				{
-					Text = x.Name,
-					Value = x.Name
-				}).ToList();
-				return View("~/Areas/Admin/Views/Users/CreateOrUpdate.cshtml", userModel);
+				return View(nameof(CreateOrUpdate), userModel);
 			}
 
 			return RedirectToAction(nameof(Index));

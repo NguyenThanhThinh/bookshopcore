@@ -8,13 +8,13 @@ using System;
 
 namespace BookShop.Data
 {
-	public class BookShopDbContext : IdentityDbContext<AppUser, AppRole,Guid>
+	public class BookShopDbContext : IdentityDbContext<AppUser, AppRole, Guid>
 	{
 		public BookShopDbContext(DbContextOptions options) : base(options)
 		{
 		}
 
-	
+
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			modelBuilder.ApplyConfiguration(new CategoryConfiguration());

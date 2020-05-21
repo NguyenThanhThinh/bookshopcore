@@ -17,6 +17,9 @@ namespace BookShop.Mappings.Books
 				.ForMember(n => n.AuthorName, t => t.MapFrom(n => n.Author.Name));
 			CreateMap<Book, CreateOrUpdateBookViewModel>().ForMember(n => n.PriceFormatted, t => t.MapFrom(n => n.Price));
 			CreateMap<CreateOrUpdateBookViewModel,Book>().ForMember(n => n.Price, t => t.MapFrom(n => n.PriceFormatted));
+
+			//CreateMap<Book, BookIndexViewModel>().
+			//ForMember(n => n.CreateDate, t => t.MapFrom(o => DateTime.Now));
 		}
 	}
 }
