@@ -51,7 +51,7 @@ namespace BookShop.Areas.Admin.Controllers
 
 			var listRoles = await _roleManager.Roles.ToListAsync();
 
-			List<CheckboxRoleViewModel> list = new List<CheckboxRoleViewModel>();
+			var list = new List<CheckboxRoleViewModel>();
 
 			if (id == null || id == Guid.Empty)
 			{
@@ -184,6 +184,25 @@ namespace BookShop.Areas.Admin.Controllers
 			}
 
 			return RedirectToAction(nameof(Index));
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> Delete(string id)
+		{
+			var user = await _userManager.FindByIdAsync(id);
+
+			bool sucess = false;
+
+			if (user != null)
+			{
+				var result = await _userManager.DeleteAsync(user);
+
+				if (result.Succeeded)
+					sucess = true;
+
+			}
+
+			return new OkObjectResult(new { id, Success = sucess });
 		}
 	}
 }
