@@ -6,21 +6,20 @@
     var Models = Model;
 }
 
-<div class="container">
-    <div class="row">
-        @foreach (var item in Models)
-        {
-            <div class="col-md-3">
 
-                <div class="card" style="width:400px">
-                    <img class="card-img-top" src="~/images/books/@item.Image" alt="Card image" style="width:100%">
-                    <div class="card-body">
-                        <h4 class="card-title">@item.Title</h4>
-                        <p class="card-text">@Html.Raw(item.Description.Truncate(500))</p>
-                        <a href="@Url.Action("Details","Home", new {id = item.Id,url=item.Alias})" class="btn btn-primary stretched-link">Details</a>
-                    </div>
+<div class="row">
+    @foreach (var item in Models)
+    {
+        <div class="col-md-3">
+
+            <div class="card" style="width:400px">
+                <img class="card-img-top" src="~/images/books/@item.Image" alt="Card image" style="width:100%">
+                <div class="card-body">
+                    <h4 class="card-title">@item.Title</h4>
+                    <p class="card-text">@Html.Raw(item.Description.Truncate(500))</p>
+                    <a href="@Url.Action("Details","Home", new {id = item.Id,url=item.Alias})" class="btn btn-primary stretched-link">Details</a>
                 </div>
             </div>
-        }
-    </div>
+        </div>
+    }
 </div>
