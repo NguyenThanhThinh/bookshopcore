@@ -4,13 +4,10 @@ using System.Threading.Tasks;
 using AutoMapper;
 using BookShop.Models;
 using BookShop.ViewModels.Accounts;
-using BookShop.ViewModels.Roles;
-using BookShop.ViewModels.Users;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -90,15 +87,7 @@ namespace BookShop.Areas.Admin.Controllers
 
 			return RedirectToAction("Login", "Account", new { Area = "Admin" });
 		}
-		public async Task<IActionResult> GetUsers()
-		{
-			var users = await _userManager.Users.ToListAsync();
 	
-			//ViewData["Roles"] = new SelectList(_roleManager.Roles, "Id", "Name");
-
-			return View();
-		}
-
 		public IActionResult Register()
 		{
 			return View();

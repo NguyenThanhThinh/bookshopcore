@@ -64,6 +64,7 @@ namespace BookShop
 			services.ConfigureApplicationCookie(ops =>
 			{
 				ops.LoginPath = "/Admin/Account/Login";
+				ops.AccessDeniedPath = "/Admin/Account/Login";
 			});
 		}
 

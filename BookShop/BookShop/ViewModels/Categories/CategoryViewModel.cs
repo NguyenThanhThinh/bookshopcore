@@ -2,7 +2,7 @@
 
 namespace BookShop.ViewModels.Categories
 {
-	public class CategoryViewModel : BaseViewModel
+	public class CategoryViewModel : BaseViewModel<int>
 	{
 
 		[Required(ErrorMessage = "Please input your name")]

@@ -1,19 +1,12 @@
 ﻿using BookShop.ViewModels.Roles;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace BookShop.ViewModels.Accounts
 {
-    public class AccountCreateUpdateViewModel 
+    public class AccountCreateUpdateViewModel : BaseViewModel<Guid>
     {
-        public Guid Id { get; set; }
-        
-        public const string ErrorMessageRequired = "{0} không được trống";
-        public const string ErrorMessageMaxLength = "{0} phải nhỏ hơn {1} ký tự";
-        public const string ErrorMessageStringLength = "{0} phải từ {2} tới {1} ký tự";
 
         [Required(ErrorMessage = ErrorMessageRequired)]
         [Display(Name = "Họ và tên")]

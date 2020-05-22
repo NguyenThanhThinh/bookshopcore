@@ -1,14 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace BookShop.Extensions
 {
-	public static class UploadFileExtensions
+    public static class UploadFileExtensions
 	{
         public static string UploadFile(IFormFile image, string folder)
         {

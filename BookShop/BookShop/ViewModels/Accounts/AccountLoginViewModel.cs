@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace BookShop.ViewModels.Accounts
 {
-    public class AccountLoginViewModel : BaseViewModel
+    public class AccountLoginViewModel : BaseViewModel<Guid>
     {
         [Required(ErrorMessage = ErrorMessageRequired)]
         [Display(Name = "Tên đăng nhập")]

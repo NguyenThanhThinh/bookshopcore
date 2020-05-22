@@ -2,7 +2,7 @@
 
 namespace BookShop.ViewModels.Authors
 {
-	public class CreateOrUpdateAuthorViewModel:BaseViewModel
+	public class CreateOrUpdateAuthorViewModel: BaseViewModel<int>
 	{
 		[Required(ErrorMessage = "Please input your name")]
 		public string Name { get; set; }

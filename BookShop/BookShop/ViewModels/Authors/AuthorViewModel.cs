@@ -3,7 +3,7 @@
 namespace BookShop.ViewModels.Authors
 {
 
-	public class AuthorViewModel:BaseViewModel
+	public class AuthorViewModel: BaseViewModel<int>
 	{
 		public string Name { get; set; }
 

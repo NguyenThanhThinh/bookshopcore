@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -11,13 +10,11 @@ using Microsoft.AspNetCore.Http;
 using BookShop.Extensions;
 using AutoMapper;
 using BookShop.ViewModels.Books;
-using Microsoft.AspNetCore.Authorization;
 
 namespace BookShop.Areas.Admin.Controllers
 {
-	[Area("Admin")]
-	
-	public class BooksController : Controller
+
+	public class BooksController : BaseController
 	{
 		private readonly BookShopDbContext _context;
 
@@ -38,26 +35,6 @@ namespace BookShop.Areas.Admin.Controllers
 			return View(viewModel);
 		}
 
-		// GET: Admin/Books/Details/5
-		public async Task<IActionResult> Details(int? id)
-		{
-			if (id == null)
-			{
-				return NotFound();
-			}
-
-			var book = await _context.Books
-				.Include(b => b.Author)
-				.Include(b => b.Category)
-				.FirstOrDefaultAsync(m => m.Id == id);
-			if (book == null)
-			{
-				return NotFound();
-			}
-
-			return View(book);
-		}
-
 		// GET: Admin/Books/Create
 		public async Task<IActionResult> CreateOrUpdate(int? id)
 		{
@@ -68,30 +45,51 @@ namespace BookShop.Areas.Admin.Controllers
 				var book = await _context.Books.FindAsync(id);
 
 				model = _mapper.Map<CreateOrUpdateBookViewModel>(book);
-
-				ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "Name", book.AuthorId);
-				ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", book.CategoryId);
+				DropdownForm(model);
 			}
 			else
 			{
-				ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "Name");
-				ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name");
+				DropdownForm(null);
 			}
 
 			return View(model);
 		}
 
+		private void DropdownForm(CreateOrUpdateBookViewModel book)
+		{
+			var authors = _context.Authors.Select(n => new
+			{
+				n.Id,
+				n.Name
+
+			}).ToList();
+
+			var categories = _context.Categories.Select(n => new
+			{
+				n.Id,
+				n.Name
+
+			}).ToList();
+
+			ViewData["AuthorId"] = new SelectList(authors, "Id", "Name", book != null ? book.AuthorId : 0);
+
+			ViewData["CategoryId"] = new SelectList(categories, "Id", "Name", book != null ? book.AuthorId : 0);
+		}
+
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create([Bind("Id,Title,Description,PriceFormatted,Alias,AuthorId,Image,CategoryId,CreateDate,UpdateDate")] CreateOrUpdateBookViewModel book, IFormFile fImage)
+		public async Task<IActionResult> Create(CreateOrUpdateBookViewModel book, IFormFile fImage)
 		{
 			if (ModelState.IsValid)
 			{
 				if (fImage == null || fImage.Length == 0)
 				{
 					ModelState.AddModelError("", "Uploaded file is empty or null.");
-					return View("~/Areas/Admin/Views/Books/CreateOrUpdate.cshtml", book);
+
+					DropdownForm(null);
+
+					return View(nameof(CreateOrUpdate), book);
 				}
 				string image = UploadFileExtensions.UploadFile(fImage, "books");
 
@@ -100,39 +98,23 @@ namespace BookShop.Areas.Admin.Controllers
 				book.Alias = book.Title.ToFriendlyUrl();
 
 				var viewModel = _mapper.Map<Book>(book);
+
 				_context.Add(viewModel);
+
 				await _context.SaveChangesAsync();
+
 				return RedirectToAction(nameof(Index));
 			}
-			ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "Name", book.AuthorId);
-			ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", book.CategoryId);
-			return View("~/Areas/Admin/Views/Books/CreateOrUpdate.cshtml", book);
+
+			DropdownForm(book);
+
+			return View(nameof(CreateOrUpdate), book);
 		}
 
-		// GET: Admin/Books/Edit/5
-		public async Task<IActionResult> Edit(int? id)
-		{
-			if (id == null)
-			{
-				return NotFound();
-			}
 
-			var book = await _context.Books.FindAsync(id);
-			if (book == null)
-			{
-				return NotFound();
-			}
-			ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "Name", book.AuthorId);
-			ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", book.CategoryId);
-			return View(book);
-		}
-
-		// POST: Admin/Books/Edit/5
-		// To protect from overposting attacks, enable the specific properties you want to bind to, for 
-		// more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,PriceFormatted,Alias,AuthorId,Image,CategoryId,CreateDate,UpdateDate")] CreateOrUpdateBookViewModel book, IFormFile fImage)
+		public async Task<IActionResult> Edit(int id, CreateOrUpdateBookViewModel book, IFormFile fImage)
 		{
 			if (id != book.Id)
 			{
@@ -144,59 +126,51 @@ namespace BookShop.Areas.Admin.Controllers
 				if (string.IsNullOrEmpty(book.Image) && fImage.Length == 0)
 				{
 					ModelState.AddModelError("", "Uploaded file is empty or null.");
-					return View("~/Areas/Admin/Views/Books/CreateOrUpdate.cshtml", book);
+
+					DropdownForm(null);
+
+					return View(nameof(CreateOrUpdate), book);
 				}
+
 				string image = UploadFileExtensions.UploadFile(fImage, "books");
 
 				if (!string.IsNullOrEmpty(image)) book.Image = image;
+
 				book.Alias = book.Title.ToFriendlyUrl();
 
 				var viewModel = _mapper.Map<Book>(book);
 
 				_context.Update(viewModel);
+
 				await _context.SaveChangesAsync();
 
 				return RedirectToAction(nameof(Index));
 			}
-			ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "Name", book.AuthorId);
-			ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", book.CategoryId);
-			return View("~/Areas/Admin/Views/Books/CreateOrUpdate.cshtml", book);
+
+			DropdownForm(book);
+
+			return View(nameof(CreateOrUpdate), book);
 		}
 
-		// GET: Admin/Books/Delete/5
-		public async Task<IActionResult> Delete(int? id)
-		{
-			if (id == null)
-			{
-				return NotFound();
-			}
-
-			var book = await _context.Books
-				.Include(b => b.Author)
-				.Include(b => b.Category)
-				.FirstOrDefaultAsync(m => m.Id == id);
-			if (book == null)
-			{
-				return NotFound();
-			}
-
-			return View(book);
-		}
-
-		// POST: Admin/Books/Delete/5
 		[HttpPost]
 		public async Task<IActionResult> Delete(int id)
 		{
+			bool sucess = false;
+
+			if (id == 0) return new OkObjectResult(new { id, Success = sucess });
+
 			var book = await _context.Books.FindAsync(id);
-			_context.Books.Remove(book);
-			await _context.SaveChangesAsync();
 
-			return new OkObjectResult(new { id, Success = true });
-		}
+			if (book != null)
+			{
+				_context.Books.Remove(book);
 
-		private bool BookExists(int id)
-		{
-			return _context.Books.Any(e => e.Id == id);
+				await _context.SaveChangesAsync();
+
+				sucess = true;
+			}
+
+			return new OkObjectResult(new { id, Success = sucess });
 		}
 	}
 }

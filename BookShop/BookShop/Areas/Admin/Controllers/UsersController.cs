@@ -7,6 +7,7 @@ using BookShop.Models;
 using BookShop.ViewModels.Accounts;
 using BookShop.ViewModels.Roles;
 using BookShop.ViewModels.Users;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,7 @@ using Microsoft.Extensions.Logging;
 
 namespace BookShop.Areas.Admin.Controllers
 {
+	//[Authorize(Roles ="admin")]
 	public class UsersController : BaseController
 	{
 		private readonly UserManager<AppUser> _userManager;
@@ -168,7 +170,7 @@ namespace BookShop.Areas.Admin.Controllers
 			{
 				foreach (var error in result.Errors)
 				{
-					ModelState.TryAddModelError(error.Code, error.Description);
+					Alert($"Code {error.Code} - Description {error.Description} ", true);
 				}
 				return View(nameof(CreateOrUpdate), userModel);
 			}
@@ -178,7 +180,7 @@ namespace BookShop.Areas.Admin.Controllers
 			{
 				foreach (var error in result.Errors)
 				{
-					ModelState.TryAddModelError(error.Code, error.Description);
+					Alert($"Code {error.Code} - Description {error.Description} ", true);
 				}
 				return View(nameof(CreateOrUpdate), userModel);
 			}
@@ -189,10 +191,12 @@ namespace BookShop.Areas.Admin.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Delete(string id)
 		{
-			var user = await _userManager.FindByIdAsync(id);
-
 			bool sucess = false;
 
+			if (string.IsNullOrEmpty(id)) return new OkObjectResult(new { id, Success = sucess });
+
+			var user = await _userManager.FindByIdAsync(id);
+	
 			if (user != null)
 			{
 				var result = await _userManager.DeleteAsync(user);

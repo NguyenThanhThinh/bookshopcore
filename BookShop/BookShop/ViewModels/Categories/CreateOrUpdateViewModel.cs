@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BookShop.ViewModels.Categories
 {
-	public class CreateOrUpdateViewModel : BaseViewModel
+	public class CreateOrUpdateViewModel : BaseViewModel<int>
 	{
 		[Required(ErrorMessage = "Please input your name")]
 		public string Name { get; set; }

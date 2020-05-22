@@ -3,9 +3,9 @@ using System.ComponentModel;
 
 namespace BookShop.ViewModels
 {
-	public class BaseViewModel
+	public  class BaseViewModel<T>
 	{
-		public int Id { get; set; }
+		public T Id { get; set; }
 
 		[DisplayName("Ngày tạo")]
 		public DateTime CreateDate { get; set; } = DateTime.Now;

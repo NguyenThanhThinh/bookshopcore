@@ -1,6 +1,6 @@
 ﻿namespace BookShop.ViewModels.Books
 {
-	public class CreateOrUpdateBookViewModel:BaseViewModel
+	public class CreateOrUpdateBookViewModel: BaseViewModel<int>
 	{
 		
 		public string Title { get; set; }

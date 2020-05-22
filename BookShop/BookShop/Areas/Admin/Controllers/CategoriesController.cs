@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace BookShop.Areas.Admin.Controllers
 {
 	using static BookShop.Extensions.StringExtensions;
-	[Authorize]
+	//[Authorize]
 	public class CategoriesController : BaseController
 	{
 		private readonly BookShopDbContext _context;

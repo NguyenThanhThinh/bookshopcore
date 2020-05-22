@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<BookShop.ViewModels.Books.BookIndexViewModel>
-
+@using static BookShop.Extensions.StringExtensions;
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
@@ -60,7 +60,7 @@
                                 @Html.DisplayFor(modelItem => item.Title)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.Description)
+                                @Html.Raw(item.Description.Truncate(500))
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.PriceFormatted)
