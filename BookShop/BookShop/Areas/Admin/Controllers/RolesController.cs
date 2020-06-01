@@ -60,7 +60,7 @@ namespace BookShop.Areas.Admin.Controllers
 
 				return RedirectToAction(nameof(Index));
 			}
-			return View("~/Areas/Admin/Views/Roles/CreateOrUpdate.cshtml", role);
+			return View(nameof(CreateOrUpdate), role);
 		}
 
 		[HttpPost]
@@ -81,7 +81,7 @@ namespace BookShop.Areas.Admin.Controllers
 
 				return RedirectToAction(nameof(Index));
 			}
-			return View("~/Areas/Admin/Views/Categories/CreateOrUpdate.cshtml", role);
+			return View(nameof(CreateOrUpdate), role);
 		}
 
 		[HttpPost]

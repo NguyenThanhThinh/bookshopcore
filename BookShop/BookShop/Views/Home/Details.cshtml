@@ -4,39 +4,8 @@
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
-    
+
 }
-
-
-<style>
-    left {
-        padding: 0;
-    }
-
-    .comment__info {
-        width: 430px;
-    }
-
-    .comment__content {
-        width: 245px;
-    }
-
-    .comment__info input {
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        padding: 5px;
-        margin: 5px 0;
-        height: 37px;
-        width: 45%;
-        float: left;
-        margin-right: 10px;
-        color: #fff;
-    }
-
-    .comment textarea {
-        resize: none;
-    }
-</style>
 
 
 <div class="navigation">
@@ -48,223 +17,37 @@
         </ol>
     </div>
 </div>
-
 <div class="container pv++">
     <div class="row item">
         <div class="col-md-8">
             <div class="row" flex-container>
                 <div class="col-md-6 item-preview">
-                    <img src="https://cdn0.fahasa.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/y/e/yeumotnguoikholam.jpg" alt="" class="img-responsive">
+                    <img src="~/images/books/@Model.Image" alt="" class="img-responsive">
                 </div>
                 <div class="col-md-6 item-detail">
                     <div class="item--card z-depth5" flex-container="column">
                         <div class="item__title pv+">
                             <h1 class="title">@Model.Title</h1>
-                            <div class="vote mt+" flex-container>
-                                <span flex-item>
-                                    @*@for (int star = 1; star <= 5; star++)
-                                        {
-                                            if (Math.Round(Convert.ToDouble(Model.Rate)) >= star)
-                                            {
-                                                @Icon.fa("star")
-                                            }
-                                            else
-                                            {
-                                                @Icon.fa("star-o")
-                                            }
-                                        }*@
-                                </span>
-                                @*<span>@Icon.fa("heart") 5 yêu thích</span>*@
-                            </div>
                         </div>
                         <div class="item__detail" flex-item>
                             <div class="item__excerpt">
                                 @Html.Raw(Model.Description.Truncate(500))
                             </div>
                             <div class="item__price">
-                                <span class="price--new">400000</span>
-                                @*<span class="price--new">@(Model.Price == 0 ? "Liên hệ" : Model.Price.ToString("N0") + "(VND)" )</span>
-                                    <span class="price--old">@(Model.OldPrice == 0 ? "Liên hệ" : Model.OldPrice.ToString("N0") + "(VND)" )</span>*@
+
+                                <span class="price--new">@(Model.PriceFormatted == 0 ? "Liên hệ" : Model.PriceFormatted.ToString("N0") + "(VND)" )</span>
+
                             </div>
                         </div>
-                        <div class="item__footer">
-                            @*@if (Model.Quantity == 0)
-                                {
-                                    <button class="add-to-cart">Hết hàng</button>
 
-                                }
-                                else
-                                {
-                                    <button class="add-to-cart">thêm vào giỏ hàng</button>
-                                }*@
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
 </div>
 
-<div class="container pv+">
-    <div class="row">
-        <div class="col-md-12">
-            <ul id="myTab" class="nav nav-tabs nav_tabs">
-                <li><a href="#service-two" data-toggle="tab">Mô tả chi tiết</a></li>
-                <li><a href="#service-three" data-toggle="tab">Đánh giá</a></li>
-            </ul>
-            <div id="myTabContent" class="tab-content">
-                <div class="tab-pane fade in active" id="service-one">
-                    <section class="container-fluid product-map">
-                        <div class="map" id="map"></div>
-                    </section>
-                </div>
-                <div class="tab-pane fade" id="service-two">
-
-                    <section class="container"></section>
-                </div>
-                <div class="tab-pane fade" id="service-three">
-
-                </div>
-            </div>
-        </div>
 
 
-    </div>
-</div>
-<div class="container relate-products">
-    <div class="section-title">
-        <h2 class="text-center">Sản phẩm liên quan</h2>
-    </div>
-    <div class="row pt++">
 
-        @for (int i = 0; i < 10; i++)
-        {
-            <div class="col-md-3">
-                <div class="item--card z-depth5" flex-container="column">
-                    <div class="item__title pv+">
-                        <h4 class="title">Yêu Một Người Khó Lắm</h4>
-                    </div>
-                    <div class="item__detail" flex-item>
-                        <div class="item__images">
-                            <a href="#">
-                                <img src="https://cdn0.fahasa.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/y/e/yeumotnguoikholam.jpg" alt="yeu moy" class="img-responsive">
-                            </a>
-                        </div>
-                    </div>
-                    <div class="item__footer pt++">
-                        @if (i % 2 == 0)
-                        {
-                            <button class="add-to-cart">Hết hàng</button>
-                        }
-                        else
-                        {
-
-                            <button class="add-to-cart">thêm vào giỏ hàng</button>
-                        }
-
-                    </div>
-                </div>
-            </div>
-        }
-    </div>
-</div>
-
-<div class="container pv++">
-    <div class="row pt++ comment">
-        <form class="create__comment" method="post" data-url="@Url.Action("CreateComment","Comment")">
-            <div class="col-md-8">
-                <div class="col-md-4">
-                    <div class="comment__content">
-                        <textarea class="form-control" name="CommentBody" id="CommentBody" rows="5" cols="20" placeholder="Nhập nội dung đánh giá về sản phẩm"></textarea>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="comment__info">
-                        <input type="text" name="CommentBy" placeholder="Họ tên" /><input type="text" name="Phone" placeholder="Điện thoại" />
-                        <input type="text" name="Email" placeholder="Email" />
-                        <button class="btn btn-info btn__comment">Gửi</button>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
-    <div class="row" id="content__comment">
-        <div class="col-sm-8">
-            @for (int i = 0; i < 10; i++)
-            {
-                <div class="panel panel-white">
-                    <div class="post-heading">
-                        <div class="pull-left meta">
-                            <div class="title">
-                                <a href="#"><b>222222222222222</b></a>
-                            </div>
-                            <h6 class="text-muted time">333</h6>
-                        </div>
-                    </div>
-                    <div class="post-description">
-                        <p>22222222222222222222</p>
-
-                    </div>
-                </div>
-            }
-        </div>
-
-        @*@Html.Action("LoadComment", "Comment", new { id = Model.Id, type = CommentTypes.Product })*@
-    </div>
-</div>
-
-<div class="container" style="display:none;">
-    <div class="text-center pv+++">
-        <button class="bgc-yellow-600 comment-button z-depth1">Đăng nhập để bình luận</button>
-    </div>
-</div>
-
-@section scripts
-{
-
-    <script src="~/lib/jquery/dist/jquery.js"></script>
-    <script>
-        (function () {
-            $('form').on('click', '.btn__comment', function () {
-
-                var form = app.buildFormValidation('form');
-                form.on("success.form.bv", function (e) {
-
-                    e.preventDefault();
-                    var $form = $(e.target);
-
-                    var url = $form.data("url");
-
-                    var data = $form.serialize();
-
-                    var req = $.ajax({
-                        url: url,
-                        data: data,
-                        method: "post"
-                    });
-
-                    req.then(function (res) {
-                        form.off("uccess.form.bv");
-
-                        switch (res.code) {
-                            case 1:
-                                $("#content__comment").load("/Views/Comment/_CommentPartial.cshtml");
-                                break;
-                            case -1:
-                                toastr.error(res.mgs || "Vui lòng đăng nhập");
-                                break;
-                            case -2:
-                                toastr.error(res.mgs || "Bình luận không thành công");
-                                break;
-                            default:
-                                toastr.error(res.mgs);
-                        }
-                    }, app.serverError);
-
-                });
-            })
-        })();
-    </script>
-}
 

@@ -13,7 +13,7 @@ namespace BookShop.Areas.Admin.Controllers
 {
 	using static BookShop.Extensions.StringExtensions;
 	[Area("Admin")]
-	public class AuthorsController : Controller
+	public class AuthorsController : BaseController
 	{
 		private readonly BookShopDbContext _context;
 
@@ -65,11 +65,11 @@ namespace BookShop.Areas.Admin.Controllers
 
 				_context.Add(viewModel);
 
-				TempData["Message"] = "Your caterory was successfully added!";
+				Alert("Lưu danh mục thành công!");
 				await _context.SaveChangesAsync();
 				return RedirectToAction(nameof(Index));
 			}
-			return View("~/Areas/Admin/Views/Authors/CreateOrUpdate.cshtml", Author);
+			return View(nameof(CreateOrUpdate), Author);
 		}
 
 		[HttpPost]
@@ -85,48 +85,39 @@ namespace BookShop.Areas.Admin.Controllers
 			{
 				Author.Alias = Author.Name.ToFriendlyUrl();
 
-				Author.UpdateDate = DateTime.Now;
-
 				var viewModel = _mapper.Map<Author>(Author);
 
 				_context.Update(viewModel);
 
-				TempData["Message"] = "Your caterory was successfully updated!";
+				Alert("Lưu danh mục thành công!");
 
 				await _context.SaveChangesAsync();
 
 
 				return RedirectToAction(nameof(Index));
 			}
-			return View("~/Areas/Admin/Views/Authors/CreateOrUpdate.cshtml", Author);
+			return View(nameof(CreateOrUpdate), Author);
 		}
 
-		public async Task<IActionResult> Delete(int? id)
+		[HttpPost]
+		public async Task<IActionResult> Delete(int id)
 		{
-			if (id == null)
+			bool sucess = false;
+
+			if (id == 0) return new OkObjectResult(new { id, Success = sucess });
+
+			var author = await _context.Authors.FindAsync(id);
+
+			if (author != null)
 			{
-				return NotFound();
+				_context.Authors.Remove(author);
+
+				await _context.SaveChangesAsync();
+
+				sucess = true;
 			}
 
-			var Author = await _context.Authors
-				.FirstOrDefaultAsync(m => m.Id == id);
-			if (Author == null)
-			{
-				return NotFound();
-			}
-
-			return View(Author);
-		}
-
-		[HttpPost, ActionName("Delete")]
-		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> DeleteConfirmed(int id)
-		{
-			var Author = await _context.Authors.FindAsync(id);
-			_context.Authors.Remove(Author);
-			await _context.SaveChangesAsync();
-			TempData["Message"] = "Your caterory was successfully deleted!";
-			return RedirectToAction(nameof(Index));
+			return new OkObjectResult(new { id, Success = sucess });
 		}
 
 

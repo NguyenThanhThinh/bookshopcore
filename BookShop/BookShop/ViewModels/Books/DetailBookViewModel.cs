@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace BookShop.ViewModels.Books
+﻿namespace BookShop.ViewModels.Books
 {
 	public class DetailBookViewModel : BaseViewModel<int>
 	{
@@ -15,5 +10,7 @@ namespace BookShop.ViewModels.Books
 		public string CategoryName { get; set; }
 
 		public string AuthorName { get; set; }
+
+		public string Image { get; set; }
 	}
 }

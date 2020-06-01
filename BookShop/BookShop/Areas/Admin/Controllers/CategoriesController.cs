@@ -8,7 +8,6 @@ using BookShop.Models;
 using AutoMapper;
 using BookShop.ViewModels.Categories;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Authorization;
 
 namespace BookShop.Areas.Admin.Controllers
 {
@@ -73,7 +72,7 @@ namespace BookShop.Areas.Admin.Controllers
 
 				return RedirectToAction(nameof(Index));
 			}
-			return View("~/Areas/Admin/Views/Categories/CreateOrUpdate.cshtml", category);
+			return View(nameof(CreateOrUpdate), category);
 		}
 
 		[HttpPost]
@@ -102,7 +101,8 @@ namespace BookShop.Areas.Admin.Controllers
 
 				return RedirectToAction(nameof(Index));
 			}
-			return View("~/Areas/Admin/Views/Categories/CreateOrUpdate.cshtml", category);
+
+			return View(nameof(CreateOrUpdate), category);
 		}
 
 

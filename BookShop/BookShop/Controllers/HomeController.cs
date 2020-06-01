@@ -32,7 +32,9 @@ namespace BookShop.Controllers
 
 		public async Task<IActionResult> Index()
 		{
-			var books = await _context.Books.Include(b => b.Author).Include(b => b.Category).ToListAsync();
+			var books = await _context.Books.
+				Include(b => b.Author).
+				Include(b => b.Category).ToListAsync();
 
 			var viewModel = _mapper.Map<IEnumerable<BookIndexViewModel>>(books);
 
@@ -41,7 +43,7 @@ namespace BookShop.Controllers
 		[Route("book/{id}/{url}")]
 		public IActionResult Details(int id)
 		{
-			if ( id == 0 ) return NotFound();
+			if (id == 0) return NotFound();
 
 			var book = _context.Books.Include(b => b.Author).Include(b => b.Category).SingleOrDefault(n => n.Id == id);
 
