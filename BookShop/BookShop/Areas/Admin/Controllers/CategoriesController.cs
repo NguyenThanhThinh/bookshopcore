@@ -54,7 +54,7 @@ namespace BookShop.Areas.Admin.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create([Bind("Id,Name,Alias,Description,CreateDate,UpdateDate")] CreateOrUpdateViewModel category)
+		public async Task<IActionResult> Create(CreateOrUpdateViewModel category)
 		{
 			if (ModelState.IsValid)
 			{
@@ -77,7 +77,7 @@ namespace BookShop.Areas.Admin.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Alias,Description,CreateDate,UpdateDate")] CreateOrUpdateViewModel category)
+		public async Task<IActionResult> Edit(int id, CreateOrUpdateViewModel category)
 		{
 			if (id != category.Id)
 			{

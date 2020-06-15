@@ -7,7 +7,6 @@ using BookShop.Models;
 using BookShop.ViewModels.Accounts;
 using BookShop.ViewModels.Roles;
 using BookShop.ViewModels.Users;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

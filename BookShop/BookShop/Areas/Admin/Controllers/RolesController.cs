@@ -47,7 +47,7 @@ namespace BookShop.Areas.Admin.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Create([Bind("Id,Name,Description")] CreateOrUpdateRoleViewModel role)
+		public async Task<IActionResult> Create(CreateOrUpdateRoleViewModel role)
 		{
 			if (ModelState.IsValid)
 			{
@@ -64,7 +64,7 @@ namespace BookShop.Areas.Admin.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Edit(Guid id, [Bind("Name,Description")] CreateOrUpdateRoleViewModel role)
+		public async Task<IActionResult> Edit(Guid id,CreateOrUpdateRoleViewModel role)
 		{
 			if (id != role.Id)
 			{
